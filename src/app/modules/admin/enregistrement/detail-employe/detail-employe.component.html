@@ -1,0 +1,118 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+    <!-- Header -->
+    <div class="relative flex flex-col lg:flex-row flex-0 items-start justify-between px-1 lg:items-center md:px-8 border-b">
+        <div class="text-4xl font-extrabold tracking-tight">
+            <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="'/enregistrement'">
+                <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
+            </button>
+        </div>
+        <div class="text-2xl uppercase font-extrabold tracking-tight">Détail</div>
+        <div></div>
+    </div>
+    
+    <!-- Main -->
+  
+    <div class="flex flex-auto overflow-hidden">
+      <div class="flex flex-col flex-auto sm:mb-0 overflow-hidden sm:overflow-y-auto">
+        <div class="flex flex-col flex-auto sm:mb-0 overflow-hidden sm:overflow-y-auto">
+            <div class="p-3">
+                <div class="px-4 sm:px-0">
+                    <div class="flex flex-row justify-center items-center">
+                        <div class="mr-2">
+                            <h3 class="text-md font-semibold leading-7 text-gray-900">
+                                {{employe.sexe == 1 ? 'M.' : 'Mm'}} <span>{{employe.nom}}</span>
+                            </h3>
+                            <p class="mt-1 max-w-2xl text-md leading-6 text-gray-500">{{employe.metierEmploye.libelle}}</p>
+                            <p class="mt-1 max-w-2xl text-md leading-6 text-gray-500">Spécialiste <span>{{employe.specialiteMetier}}</span></p>
+                        </div>
+                        <div>
+                            <div class="w-23 h-28 flex justify-center">
+                                <!-- <p class="w-23 h-28 border-2">photo</p> -->
+                                <img class="object-contain w-full h-full" [src]="imageUrl+employe.empty1" alt="photo client">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 border-t border-gray-100">
+                  <dl class="divide-y divide-gray-100">
+                    <div class="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt class="text-md font-bold leading-6 text-gray-900">Année d'experience poste actuel</dt>
+                        <dd class="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            {{employe.anneeExperiencePoste == 0 ? 'Moins de 1 an ou pas d\'experience' : employe.anneeExperiencePoste }}
+                        </dd>
+                    </div>
+                    <div class="flex flex-row py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt class="text-md font-bold leading-6 text-gray-900">Ancienne profession</dt>
+                        <dd class="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            <div class="grid grid-cols-2">
+                                <div class="col">{{employe.professionAnterieur}}</div>
+                                <div class="col">
+                                    <span>{{employe.anneeExperiencePosteAnterieur == 0 ? 'Moins de 1 ' : employe.anneeExperiencePoste}} an(s) d'experience</span>
+                                </div>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt class="text-md font-bold leading-6 text-gray-900">Né le</dt>
+                      <dd class="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{employe.dateNaissance | date:'dd/MM/yyyy'}}</dd>
+                    </div>
+                    <div class="flex flex-row py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt class="text-md font-bold leading-6 text-gray-900">Statut matrimonial</dt>
+                        <dd class="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            <div class="grid grid-cols-2">
+                                <div class="col">{{employe.statutMatrimonial.libelle}}</div>
+                                <div class="col">
+                                    <span>{{employe.nombreEnfant == 0 ? 'Sans' : employe.nombreEnfant}} enfant(s)</span>
+                                </div>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="flex flex-row py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt class="text-md font-bold leading-6 text-gray-900">Numero de pièce d'identité</dt>
+                        <dd class="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            <div class="grid grid-cols-2">
+                                <div class="col"> 
+                                    <span class="text-md font-bold leading-6 text-gray-900">Type : </span>
+                                    {{employe.typePiece.libelle}}
+                                </div>
+                                <div class="col">{{employe.numeroPiece}}</div>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt class="text-md font-bold leading-6 text-gray-900">Télephone</dt>
+                        <dd class="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            {{employe.contact1+' / '+employe.contact2}}
+                        </dd>
+                    </div>
+                    <div class="flex flex-row py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt class="text-md font-bold leading-6 text-gray-900">Résidence</dt>
+                        <dd class="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                            <div class="grid grid-cols-2">
+                                <div class="col">
+                                    <span class="text-md font-bold leading-6 text-gray-900">Permanent :</span>
+                                    {{employe.residencePermanent}}
+                                </div>
+                                <div class="col">
+                                    <span class="text-md font-bold leading-6 text-gray-900">Actuel :</span>
+                                    {{employe.residenceActuel}}
+                                </div>
+                            </div>
+                        </dd>
+                    </div>
+                    <div class="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt class="text-md font-bold leading-6 text-gray-900">Date d'enregistrement</dt>
+                        <dd class="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{employe.dateCreation | date:'dd/MM/yyyy'}}</dd>
+                    </div>
+                    <div class="px-4 py-1 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt class="text-md font-bold leading-6 text-gray-900">Entreprise</dt>
+                        <dd class="mt-1 text-md leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{employe.entreprise.nom}}</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+        </div>
+      </div>
+    </div>
+</div>

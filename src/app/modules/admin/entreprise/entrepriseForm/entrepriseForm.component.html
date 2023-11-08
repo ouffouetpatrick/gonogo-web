@@ -1,0 +1,96 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Enregistrement entreprise</div>
+        <button
+            mat-icon-button
+            (click)="close()"
+            [tabIndex]="-1">
+            <mat-icon
+                class="text-current"
+                [svgIcon]="'heroicons_outline:x'"> 
+            </mat-icon>
+        </button>
+    </div>
+
+    <!-- formulaire -->
+    <form class="flex flex-col flex-auto p-6 pb-0 sm:p-8 overflow-y-auto" [formGroup]="entrepriseForm">
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col">
+                <mat-form-field appearance="fill">
+                    <mat-label>Selectionner le domaine</mat-label>
+                    <mat-select [formControlName]="'domaineActivite'" [compareWith]="comparer">
+                        <mat-option *ngFor="let domaineActivite of listeDomaineActivite" [value]="domaineActivite">
+                            {{domaineActivite.libelle}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error>Ce champ est obligatoire</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-col">
+                <mat-form-field appearance="fill">
+                    <mat-label>Selectionner le statut</mat-label>
+                    <mat-select [formControlName]="'statutJuridique'" [compareWith]="comparer">
+                        <mat-option *ngFor="let statutJuridique of listeStatutJuridique" [value]="statutJuridique">
+                            {{statutJuridique.libelle}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error>Ce champ est obligatoire</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <mat-form-field appearance="fill">
+            <mat-label>Nom</mat-label>
+            <input
+                matInput
+                [formControlName]="'nom'">
+            <mat-error>Ce champ est obligatoire</mat-error>
+            <!-- <mat-error *ngIf="entrepriseForm.get('nom').invalid && entrepriseForm.get('nom').errors.required">
+                Ce champ est obligatoire
+            </mat-error> -->
+            <!-- <mat-error *ngIf="entrepriseForm.get('nom').invalid && entrepriseForm.get('nom').hasError('lettersOnly')">
+                Ce champ doit contenir que des lettres
+            </mat-error> -->
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Contact</mat-label>
+            <input
+                matInput
+                [formControlName]="'contact'">
+            <mat-error *ngIf="entrepriseForm.get('contact').hasError('minlength') || entrepriseForm.get('contact').hasError('maxlength')">
+                Le numero doit contenir uniquement que 10 caractères
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Localisation</mat-label>
+            <input
+                matInput
+                [formControlName]="'localisation'">
+            <mat-error>Ce champ est obligatoire</mat-error>
+        </mat-form-field>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-1 sm:mt-4">
+            <div class="flex items-center mt-1 sm:mt-0">
+                <button
+                    class="ml-auto sm:ml-0"
+                    mat-stroked-button
+                    mat-dialog-close>
+                    Annuler
+                </button>
+                <button
+                    [disabled]="entrepriseForm.invalid"
+                    (click)="saveEntreprise()"
+                    class="order-first sm:order-last ml-1"
+                    mat-flat-button
+                    [color]="'primary'">
+                    Valider
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,29 @@
+
+.mat-form-field-flex{
+    min-height: 40px !important;
+}
+
+.chexbox-h2 {
+    margin: 10px;
+  }
+  
+  .chexbox-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+  
+  .chexbox {
+    margin: 0 10px;
+    // background-color: red;
+    // border-color: red;
+  }
+
+  .mat-radio-outer-circle{
+    border-color:#4f46e5 !important;
+  }
+
+  .mat-radio-inner-circle{
+    background-color:#4f46e5 !important;
+  }

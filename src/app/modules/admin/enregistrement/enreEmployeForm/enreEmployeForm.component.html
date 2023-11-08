@@ -1,0 +1,320 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-auto bg-card dark:bg-transparent">
+
+    <!-- Header -->
+    <div class="relative flex flex-col lg:flex-row flex-0 items-start justify-between px-6 lg:items-center md:px-8 border-b">
+        <div class="text-4xl font-extrabold tracking-tight">
+            <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="'/enregistrement'">
+                <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
+            </button>
+        </div>
+        <div class="text-3xl uppercase font-extrabold tracking-tight">Enregistrement employe</div>
+        <div></div>
+    </div>
+    
+    <!-- Main -->
+  
+    <div class="flex flex-col p-8 bg-gray-50 min-h-180">
+        <form
+                class="p-4 bg-card shadow rounded overflow-hidden"
+                [formGroup]="employeForm">
+                <mat-horizontal-stepper
+                    [linear]="true"
+                    #employe>
+                    <mat-step
+                        [formGroupName]="'step1'"
+                        [stepControl]="employeForm.get('step1')"
+                        #employeStep1>
+                        <ng-template matStepLabel>Etape 1</ng-template>
+                        <div class="flex">
+                            <mat-form-field class="flex-auto mr-2">
+                                <mat-label>Nom</mat-label>
+                                <input
+                                    matInput
+                                    [formControlName]="'nom'"
+                                    [placeholder]="'Nom'">
+                            </mat-form-field>
+                            <mat-form-field class="flex-auto">
+                                <mat-label>Prenom</mat-label>
+                                <input
+                                    matInput
+                                    [formControlName]="'prenom'"
+                                    [placeholder]="'Prenom'">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex">
+                            <mat-form-field class="flex-auto">
+                                <mat-label>Date de naissance</mat-label>
+                                <input 
+                                    matInput 
+                                    [matDatepicker]="picker"
+                                    formControlName="dateNaissance"
+                                    [placeholder]="'Jour/Mois/Année'"
+                                    [max]="currentDate">
+                                <!-- <mat-hint>Jour/Mois/Année</mat-hint> -->
+                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col gt-xs:flex-row">
+                            <mat-form-field class="flex-auto gt-xs:pr-3">
+                                <mat-label>Selectionnez le genre</mat-label>
+                                <mat-select
+                                    [formControlName]="'sexe'"
+                                    [placeholder]="'Selectionnez le genre'">
+                                    <mat-option [value]=1>Masculin</mat-option>
+                                    <mat-option [value]=2>Feminin</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex justify-end">
+                            <button
+                                class="px-8"
+                                mat-flat-button
+                                [color]="'primary'"
+                                type="button"
+                                [disabled]="employeStep1.stepControl.invalid"
+                                matStepperNext>
+                                Suivant
+                            </button>
+                        </div>
+                    </mat-step>
+
+                    <mat-step
+                        [formGroupName]="'step2'"
+                        [stepControl]="employeForm.get('step2')"
+                        #employeStep2>
+                        <ng-template matStepLabel>Etape 2</ng-template>
+                        <div class="flex flex-col gt-xs:flex-row">
+                            <mat-form-field class="flex-auto gt-xs:pr-3">
+                                <mat-label>Selectionnez le statut matrimonial</mat-label>
+                                <mat-select
+                                    [formControlName]="'statutMatrimonial'"
+                                    [compareWith]="comparer">
+                                    <mat-option *ngFor="let statutMatrimonial of listStatutMatrimonial" [value]="statutMatrimonial">
+                                        {{statutMatrimonial.libelle}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="flex-auto gt-xs:pr-3">
+                                <mat-label>Nombre d'enfant</mat-label>
+                                <input
+                                    matInput
+                                    type="number"
+                                    [formControlName]="'nombreEnfant'"
+                                    [placeholder]="'000'">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex">
+                            <mat-form-field class="flex-auto mr-2">
+                                <mat-label>Résidence permanent</mat-label>
+                                <input
+                                    matInput
+                                    [formControlName]="'residencePermanent'"
+                                    [placeholder]="'Résidence permanent'">
+                            </mat-form-field>
+                            <mat-form-field class="flex-auto">
+                                <mat-label>Résidence actuel</mat-label>
+                                <input
+                                    matInput
+                                    [formControlName]="'residenceActuel'"
+                                    [placeholder]="'Résidence actuel'">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex justify-end">
+                            <button
+                                class="px-8 mr-2"
+                                mat-flat-button
+                                [color]="'accent'"
+                                type="button"
+                                matStepperPrevious>
+                                Retour
+                            </button>
+                            <button
+                                class="px-8"
+                                mat-flat-button
+                                [color]="'primary'"
+                                type="button"
+                                [disabled]="employeStep2.stepControl.invalid"
+                                matStepperNext>
+                                Suivant
+                            </button>
+                        </div>
+                    </mat-step>
+
+                    <mat-step
+                        [formGroupName]="'step3'"
+                        [stepControl]="employeForm.get('step3')"
+                        #employeStep3>
+                        <ng-template matStepLabel>Etape 3</ng-template>
+                        <div class="flex flex-col gt-xs:flex-row">
+                            <mat-form-field class="flex-auto gt-xs:pr-3">
+                                <mat-label>Selectionnez le type de pièce</mat-label>
+                                <mat-select
+                                    [formControlName]="'typePiece'"
+                                    [compareWith]="comparer">
+                                    <mat-option *ngFor="let typePiece of listeTypePiece" [value]="typePiece">
+                                        {{typePiece.libelle}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="flex-auto gt-xs:pr-3">
+                                <mat-label>Numero de la pièce</mat-label>
+                                <input
+                                    matInput
+                                    [formControlName]="'numeroPiece'"
+                                    [placeholder]="'XY12345'">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex">
+                            <mat-form-field class="flex-auto mr-2">
+                                <mat-label>Contact 1</mat-label>
+                                <input
+                                    matInput
+                                    [formControlName]="'contact1'"
+                                    [placeholder]="'0102030405'">
+                            </mat-form-field>
+                            <mat-form-field class="flex-auto">
+                                <mat-label>Contact 2</mat-label>
+                                <input
+                                    matInput
+                                    [formControlName]="'contact2'"
+                                    [placeholder]="'0102030405'">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex justify-end">
+                            <button
+                                class="px-8 mr-2"
+                                mat-flat-button
+                                [color]="'accent'"
+                                type="button"
+                                matStepperPrevious>
+                                Retour
+                            </button>
+                            <button
+                                class="px-8"
+                                mat-flat-button
+                                [color]="'primary'"
+                                type="button"
+                                [disabled]="employeStep3.stepControl.invalid"
+                                matStepperNext>
+                                Suivant
+                            </button>
+                        </div>
+                    </mat-step>
+
+                    <mat-step
+                        [formGroupName]="'step4'"
+                        [stepControl]="employeForm.get('step4')"
+                        #employeStep4>
+                        <ng-template matStepLabel>Etape 4</ng-template>
+                        <div class="flex flex-col gt-xs:flex-row">
+                            <mat-form-field class="flex-auto gt-xs:pr-3">
+                                <mat-label>Selectionnez le metier</mat-label>
+                                <mat-select
+                                    [formControlName]="'metierEmploye'"
+                                    [compareWith]="comparer">
+                                    <mat-option *ngFor="let metier of listeMetier" [value]="metier">
+                                        {{metier.libelle}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex">
+                            <mat-form-field class="flex-auto mr-2">
+                                <mat-label>Specialité metier</mat-label>
+                                <input
+                                    matInput
+                                    [formControlName]="'specialiteMetier'"
+                                    [placeholder]="'Specialité metier'">
+                            </mat-form-field>
+                            <mat-form-field class="flex-auto">
+                                <mat-label>Année d'experience poste souhaité</mat-label>
+                                <input
+                                    matInput
+                                    type="number"
+                                    [formControlName]="'anneeExperiencePoste'"
+                                    [placeholder]="'00'">
+                            </mat-form-field>
+                        </div>
+                        <div class="flex">
+                            <mat-form-field class="flex-auto mr-2">
+                                <mat-label>Selectionnez la profession anterieur</mat-label>
+                                <mat-select
+                                    [formControlName]="'professionAnterieur'"
+                                    >
+                                    <mat-option *ngFor="let metier of listeMetier" [value]="metier.id">
+                                        {{metier.libelle}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="flex-auto">
+                                <mat-label>Année d'experience poste anterieur</mat-label>
+                                <input
+                                    matInput
+                                    type="number"
+                                    [formControlName]="'anneeExperiencePosteAnterieur'"
+                                    [placeholder]="'00'">
+                            </mat-form-field>
+                        </div>
+                        <mat-form-field class="mt-2 w-full">
+                            <mat-label >Selectionner Image</mat-label>
+                            <ngx-mat-file-input
+                                [multiple]="'multiple'"
+                                [formControlName]="'empty1'" [accept]="'image/jpeg, image/png, image/jpg'" 
+                                placeholder="Selectionnez un fichier" 
+                                (change)="fileChangeEvent($event)">
+                            </ngx-mat-file-input>
+                            <mat-icon [svgIcon]="'heroicons_outline:photograph'"></mat-icon>
+                        </mat-form-field>
+                        <div class="flex justify-end">
+                            <button
+                                class="px-8 mr-2"
+                                mat-flat-button
+                                [color]="'accent'"
+                                type="button"
+                                matStepperPrevious>
+                                Retour
+                            </button>
+                            <!-- Vérifie s'il y a eu une interaction dans le formulaire (pristine) -->
+                            <!-- [disabled]="employeStep4.stepControl.pristine || employeStep4.stepControl.invalid" -->
+                            <button
+                                class="px-8"
+                                mat-flat-button
+                                [color]="'primary'"
+                                type="button"
+                                [disabled]="employeStep4.stepControl.invalid"
+                                matStepperNext>
+                                Suivant
+                            </button>
+                        </div>
+                    </mat-step>
+
+                    <mat-step>
+                        <ng-template matStepLabel>Terminer</ng-template>
+                        <p class="my-6 font-medium">
+                            Le formulaire a bien eté renseigné. Cliquer sur "Envoyer" pour enregistrer l'employé.
+                        </p>
+                        <div class="flex justify-end mt-8">
+                            <button
+                                class="px-8 mr-2"
+                                mat-flat-button
+                                [color]="'accent'"
+                                type="button"
+                                matStepperPrevious>
+                                Retour
+                            </button>
+                            <button
+                                type="submit"
+                                (click)="saveEmploye()"
+                                class="px-8"
+                                mat-flat-button
+                                [color]="'primary'"
+                                >
+                                Envoyer
+                            </button>
+                        </div>
+                    </mat-step>
+                </mat-horizontal-stepper>
+        </form>
+    </div>
+</div>
