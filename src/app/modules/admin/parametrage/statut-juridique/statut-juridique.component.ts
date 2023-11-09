@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -30,6 +30,7 @@ export class StatutJuridiqueComponent
     pagination: Pagination = { page: 1, size: 10, startIndex: 0 };
     page = { pageSize: PAGE_SIZE, pageSizeOptions: PAGE_SIZE_OPTIONS };
     isLoading: boolean = false;
+    deleteStatutJuridiqueForm : FormGroup;
 
     //Données tableau
     dataSource = new MatTableDataSource<StatutJuridique>([]);
@@ -43,12 +44,16 @@ export class StatutJuridiqueComponent
 
     ngOnInit(): void {
         this.getStatutJuridique();
+        this.generateConfirmForm();
     }
 
     getStatutJuridique(){
 
         this.isLoading = true; // Démarre le loader
-        const getStatutJuridique = this._statutJuridiqueService.query({order: { id: 'DESC'}});
+        const getStatutJuridique = this._statutJuridiqueService.query({
+            order: { id: 'DESC'},
+            where: {geler: 0}
+        });
         getStatutJuridique.subscribe((result) => {
             this.isLoading = false; // stop le loader
             this.dataSource = new MatTableDataSource<any>(result);
@@ -75,6 +80,45 @@ export class StatutJuridiqueComponent
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
                 this.getStatutJuridique();
+            }
+        });
+    }
+
+    generateConfirmForm() {
+        this.deleteStatutJuridiqueForm = this._formBuilder.group({
+            title: 'Suppression du statut juridique',
+            message:
+                'Êtes-vous sûr de vouloir supprimer définitivement ce statut juridique? <span class="font-medium">Cette action ne peut pas être annulée!</span>',
+            icon: this._formBuilder.group({
+                show: true,
+                name: 'heroicons_outline:exclamation',
+                color: 'warn',
+            }),
+            actions: this._formBuilder.group({
+                confirm: this._formBuilder.group({
+                    show: true,
+                    label: 'Supprimer',
+                    color: 'warn',
+                }),
+                cancel: this._formBuilder.group({
+                    show: true,
+                    label: 'Annuler',
+                }),
+            }),
+            dismissible: true,
+        });
+    }
+
+    deleteStatutJuridique(statutJuridique?: StatutJuridique){
+        const dialogRef = this._fuseConfirmationService.open(
+            this.deleteStatutJuridiqueForm.value
+        );
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result == 'confirmed') {
+                const deleteReq = this._statutJuridiqueService.supprimerStatutJuridique(statutJuridique);
+                deleteReq.subscribe(() => {
+                    this.getStatutJuridique();
+                });
             }
         });
     }

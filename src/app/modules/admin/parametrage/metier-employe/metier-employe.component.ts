@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -30,6 +30,7 @@ export class MetierEmployeComponent
     pagination: Pagination = { page: 1, size: 10, startIndex: 0 };
     page = { pageSize: PAGE_SIZE, pageSizeOptions: PAGE_SIZE_OPTIONS };
     isLoading: boolean = false;
+    deleteMetierForm: FormGroup;
     
     //Données tableau
     dataSource = new MatTableDataSource<MetierEmploye>([]);
@@ -43,12 +44,15 @@ export class MetierEmployeComponent
 
     ngOnInit(): void {
         this.getMetier();
+        this.generateConfirmForm();
     }
 
     getMetier(){
-
         this.isLoading = true; // Démarre le loader
-        const getMetier = this._metierEmployeService.query({order: { id: 'DESC'}});
+        const getMetier = this._metierEmployeService.query({
+            order: { id: 'DESC'},
+            where: {geler: 0}
+        });
         getMetier.subscribe((result) => {
             this.isLoading = false; // stop le loader
             this.dataSource = new MatTableDataSource<any>(result);
@@ -75,6 +79,45 @@ export class MetierEmployeComponent
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
                 this.getMetier();
+            }
+        });
+    }
+
+    generateConfirmForm() {
+        this.deleteMetierForm = this._formBuilder.group({
+            title: 'Suppression du metier',
+            message:
+                'Êtes-vous sûr de vouloir supprimer définitivement ce metier? <span class="font-medium">Cette action ne peut pas être annulée!</span>',
+            icon: this._formBuilder.group({
+                show: true,
+                name: 'heroicons_outline:exclamation',
+                color: 'warn',
+            }),
+            actions: this._formBuilder.group({
+                confirm: this._formBuilder.group({
+                    show: true,
+                    label: 'Supprimer',
+                    color: 'warn',
+                }),
+                cancel: this._formBuilder.group({
+                    show: true,
+                    label: 'Annuler',
+                }),
+            }),
+            dismissible: true,
+        });
+    }
+
+    deleteMetier(metier?: MetierEmploye){
+        const dialogRef = this._fuseConfirmationService.open(
+            this.deleteMetierForm.value
+        );
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result == 'confirmed') {
+                const deleteReq = this._metierEmployeService.supprimerMetier(metier);
+                deleteReq.subscribe(() => {
+                    this.getMetier();
+                });
             }
         });
     }

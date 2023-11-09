@@ -41,4 +41,9 @@ export class StatutJuridiqueService {
     findOne(primaryKey: any): Observable<any> {
         return this.http.get<any>(`${this.url}/${encodeURI(JSON.stringify(primaryKey))}`);
     }
+
+    //Supprimer statut juridique
+    supprimerStatutJuridique(statutJuridique): Observable<any> {
+        return this.http.post<any>(`${this.url}/supprimerStatutJuridique`, statutJuridique);
+    }
 }

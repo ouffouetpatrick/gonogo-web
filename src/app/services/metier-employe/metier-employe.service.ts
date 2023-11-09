@@ -42,4 +42,9 @@ export class MetierEmployeService {
     findOne(primaryKey: any): Observable<any> {
         return this.http.get<any>(`${this.url}/${encodeURI(JSON.stringify(primaryKey))}`);
     }
+
+    //Supprimer metier
+    supprimerMetier(metier): Observable<any> {
+        return this.http.post<any>(`${this.url}/supprimerMetier`, metier);
+    }
 }

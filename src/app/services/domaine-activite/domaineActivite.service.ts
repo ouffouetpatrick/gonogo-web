@@ -42,4 +42,9 @@ export class DomaineActiviteService {
     findOne(primaryKey: any): Observable<any> {
         return this.http.get<any>(`${this.url}/${encodeURI(JSON.stringify(primaryKey))}`);
     }
+
+    //Supprimer domaine activité
+    supprimerDomaineActivite(domaineActivite): Observable<any> {
+        return this.http.post<any>(`${this.url}/supprimerDomaineActivite`, domaineActivite);
+    }
 }
